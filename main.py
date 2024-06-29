@@ -13,19 +13,24 @@ def start(message):
 def get_weather(message):
     city = message.text.strip().lower()
     res = requests.get(f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API}&units=metric')
-    data = json.loads(res.text)
-    temp = data["main"]["temp"]
-    TOKEN.reply_to(message, f'Погода зараз: {temp}°C')
 
-    if temp >= 18.0:
-        image = 'summer.jpg'
-    elif temp <= 17.0:
-       image = 'neutral.jpg'
-    elif temp <= 8.0:
-        image = 'winter.jpg'
+    if res.status_code == 200:
+        data = json.loads(res.text)
+        temp = data["main"]["temp"]
+
+        TOKEN.reply_to(message, f'Погода зараз: {temp}°C')
+
+        if temp >= 18.0:
+            image = 'summer.jpg'
+        elif temp <= 17.0:
+            image = 'neutral.jpg'
+        elif temp <= 8.0:
+            image = 'winter.jpg'
     
-    file = open(f'./photo/{image}', 'rb')
-    TOKEN.send_photo(message.chat.id, file)
+        file = open(f'./photo/{image}', 'rb')
 
+        TOKEN.send_photo(message.chat.id, file)
+    else:
+        TOKEN.reply_to(message, f'Місто вказано не правильно')
 
 TOKEN.polling(non_stop=True)
