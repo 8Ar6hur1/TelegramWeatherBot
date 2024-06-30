@@ -20,16 +20,24 @@ def get_weather(message):
 
         TOKEN.reply_to(message, f'Погода зараз: {temp}°C')
 
-        if temp >= 18.0:
-            image = 'summer.jpg'
-        elif temp <= 17.0:
-            image = 'neutral.jpg'
-        elif temp <= 8.0:
-            image = 'winter.jpg'
+        if temp >= 30.0:
+            image = './very_hot.jpg'
+        elif 18.0 <= temp < 30.0:
+            image = './summer.png'
+        elif 10.0 <= temp < 18.0:
+            image = './mild.jpg'
+        elif 0.0 <= temp < 10.0:
+            image = './cool.jpg'
+        elif -10.0 <= temp < 0.0:
+            image = './cold.webp'
+        elif -20.0 <= temp < -10.0:
+            image = './very_cold.jpg'
+        else:
+            image = './hard_very_cold.webp'
     
         file = open(f'./photo/{image}', 'rb')
-
         TOKEN.send_photo(message.chat.id, file)
+        file.close()
     else:
         TOKEN.reply_to(message, f'Місто вказано не правильно')
 
